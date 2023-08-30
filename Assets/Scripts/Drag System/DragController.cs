@@ -25,6 +25,7 @@ public class DragController : MonoBehaviour
         } 
         DontDestroyOnLoad(gameObject);
     }
+
     void Update() {
         if (m_isDragActive && (Input.GetMouseButtonUp(0))) {
             Drop();
@@ -58,6 +59,7 @@ public class DragController : MonoBehaviour
 
     void InitDrag() {
         UpdateDragStatus(true);
+        transform.localScale = Vector3.one;
     }
     void Drag() {
         m_lastDragged.transform.position = new Vector2(m_worldPosition.x, m_worldPosition.y);

@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine.AI;
 using UnityEditor.Search;
 
+// https://youtu.be/I17uqTxbWK0?t=280
 public class Connective : MonoBehaviour
 {
     private Draggable m_draggable;
@@ -19,7 +20,9 @@ public class Connective : MonoBehaviour
     public Connection.Part PartType {get; private set; }= Connection.Part.None;
 
     [SerializeField]
-    private float connectionRange = 5f;
+    private float m_connectionRange = 5f;
+    [SerializeField]
+    private float m_connectionSpeed = 15f;
 
     // Start is called before the first frame update
     void Awake()
@@ -34,6 +37,10 @@ public class Connective : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+    }
+
+    void FixedUpdate() {
         // We only look for connections if we are being dragged
         if (m_draggable.isDragging) {
             LookForConnections();
@@ -49,12 +56,12 @@ public class Connective : MonoBehaviour
         if (m_partOutputConnection == null || m_externalInputConnection == null) {
             return;
         }
-
-        // If hasConnected is true, we return.
+        Vector3 destination = m_externalInputConnection.transform.position - m_partOutputConnection.transform.localPosition;
+        // If hasConnected is true, we are already connected to something so we return.
+        // hasConnected will become false when the part is dragged out of range of any parts.
         if (m_hasConnected) {
-            // We move the parts to the appropriate positions, in case it is dragged onto a different spot but still in range
-            transform.position = m_externalInputConnection.transform.position - m_partOutputConnection.transform.localPosition;
-
+            // Since we are still connected, we return to the same spot.
+            transform.position = Vector3.Lerp(transform.position, destination, m_connectionSpeed * Time.deltaTime);
             return;
         }
         // Connect the two connections.
@@ -63,7 +70,7 @@ public class Connective : MonoBehaviour
         // Alert PartSystemManager to update stats.
 
         // We move the parts to the appropriate positions.
-        transform.position = m_externalInputConnection.transform.position - m_partOutputConnection.transform.localPosition;
+        transform.position = Vector3.Lerp(transform.position, destination, m_connectionSpeed * Time.deltaTime);
 
         // Afterwards, we set hasConnected to true.
         m_hasConnected = true;
@@ -80,11 +87,11 @@ public class Connective : MonoBehaviour
         float closestConnection = 99999f;
         // At this point, this part is currently being dragged and we have at least one output connection.
         // We need to check if we are near another part's input connection.
-        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, connectionRange).ToList();
-        Debug.DrawLine(transform.position, transform.position + new Vector3(connectionRange, 0, 0), Color.red, 0.1f);
-        Debug.DrawLine(transform.position, transform.position + new Vector3(-connectionRange, 0, 0), Color.red, 0.1f);
-        Debug.DrawLine(transform.position, transform.position + new Vector3(0, connectionRange, 0), Color.red, 0.1f);
-        Debug.DrawLine(transform.position, transform.position + new Vector3(0, -connectionRange, 0), Color.red, 0.1f);
+        List<Collider2D> colliders = Physics2D.OverlapCircleAll(transform.position, m_connectionRange).ToList();
+        Debug.DrawLine(transform.position, transform.position + new Vector3(m_connectionRange, 0, 0), Color.red, 0.1f);
+        Debug.DrawLine(transform.position, transform.position + new Vector3(-m_connectionRange, 0, 0), Color.red, 0.1f);
+        Debug.DrawLine(transform.position, transform.position + new Vector3(0, m_connectionRange, 0), Color.red, 0.1f);
+        Debug.DrawLine(transform.position, transform.position + new Vector3(0, -m_connectionRange, 0), Color.red, 0.1f);
         foreach (Collider2D collider in colliders) {
             if (collider.TryGetComponent<Connection>(out Connection c)) {
                 // Here we check what type of connection and also need to check if it is the right part type.

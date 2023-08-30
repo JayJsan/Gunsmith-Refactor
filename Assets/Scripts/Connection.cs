@@ -19,6 +19,7 @@ public class Connection : MonoBehaviour
         Sight,
         Grip,
         Trigger,
+        Holder, // This isn't really a part type but holds the part when the players weapon is empty and no parts are connected.
     }
 
     [field: SerializeField]
