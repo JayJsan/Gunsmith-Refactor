@@ -63,6 +63,7 @@ public class DragController : MonoBehaviour
     }
     void Drag() {
         m_lastDragged.transform.position = new Vector2(m_worldPosition.x, m_worldPosition.y);
+        m_lastDragged.transform.rotation = Quaternion.Lerp(m_lastDragged.transform.rotation, Quaternion.identity, 10f * Time.deltaTime);
     }
     void Drop() {
         UpdateDragStatus(false);

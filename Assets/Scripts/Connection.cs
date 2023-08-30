@@ -28,12 +28,17 @@ public class Connection : MonoBehaviour
     public List<Part> CompatibleParts {get; private set; } = new List<Part>();
     [field: SerializeField]
     private bool isConnected = false;
+    [field: SerializeField]
+    private bool isHolder = false;
 
     private Connection connectedTo = null;
 
     public void Connect(Connection externalConnection) {
         connectedTo = externalConnection;
         isConnected = true;
+        if (isHolder) {
+            GetComponent<Collider2D>().enabled = false;
+        }
     }
 
     public Connection CheckConnected() {
@@ -47,5 +52,8 @@ public class Connection : MonoBehaviour
     public void Disconnect() {
         connectedTo = null;
         isConnected = false;
+        if (isHolder) {
+            GetComponent<Collider2D>().enabled = true;
+        }
     }
 }

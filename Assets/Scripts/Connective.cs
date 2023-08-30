@@ -62,15 +62,17 @@ public class Connective : MonoBehaviour
         if (m_hasConnected) {
             // Since we are still connected, we return to the same spot.
             transform.position = Vector3.Lerp(transform.position, destination, m_connectionSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, m_externalInputConnection.transform.rotation, m_connectionSpeed * Time.deltaTime);
             return;
         }
         // Connect the two connections.
         m_partOutputConnection.Connect(m_externalInputConnection);
-
+        m_externalInputConnection.Connect(m_partOutputConnection);
         // Alert PartSystemManager to update stats.
 
         // We move the parts to the appropriate positions.
         transform.position = Vector3.Lerp(transform.position, destination, m_connectionSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, m_externalInputConnection.transform.rotation, m_connectionSpeed * Time.deltaTime);
 
         // Afterwards, we set hasConnected to true.
         m_hasConnected = true;
@@ -132,7 +134,10 @@ public class Connective : MonoBehaviour
         // We set our reference to null and hasConnected to false.
         if (!connectionMade) {
             m_hasConnected = false;
-            m_externalInputConnection = null;
+            if (m_externalInputConnection != null) {
+                m_externalInputConnection.Disconnect();
+                m_externalInputConnection = null;
+            }
             m_partOutputConnection.Disconnect();
         }
     }
