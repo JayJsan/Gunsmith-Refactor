@@ -26,6 +26,25 @@ public class Connection : MonoBehaviour
     [field: SerializeField]
     public List<Part> CompatibleParts {get; private set; } = new List<Part>();
     [field: SerializeField]
-    public bool isConnected {get; set; } = false;
+    private bool isConnected = false;
 
+    private Connection connectedTo = null;
+
+    public void Connect(Connection externalConnection) {
+        connectedTo = externalConnection;
+        isConnected = true;
+    }
+
+    public Connection CheckConnected() {
+        return connectedTo;
+    }
+
+    public bool IsConnected() {
+        return isConnected;
+    }
+
+    public void Disconnect() {
+        connectedTo = null;
+        isConnected = false;
+    }
 }

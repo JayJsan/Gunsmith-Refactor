@@ -34,26 +34,36 @@ public class Connective : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // We connect to the closest once we are no longer dragging.
-
         // We only look for connections if we are being dragged
-        if (!m_draggable.isDragging) {
-            return;
+        if (m_draggable.isDragging) {
+            LookForConnections();
+        } else if (!m_draggable.isDragging) {
+            // We connect to the closest once we are no longer dragging.
+            ConnectConnections();
         }
-        LookForConnections();
     }
 
     private void ConnectConnections() {
-        // If hasConnected is true, we return.
-        if (m_hasConnected) {
-            return;
-        }
         // Otherwise, we connect our part output connection to the external input connection
         // If one is null, we do not connect.
         if (m_partOutputConnection == null || m_externalInputConnection == null) {
             return;
         }
 
+        // If hasConnected is true, we return.
+        if (m_hasConnected) {
+            // We move the parts to the appropriate positions, in case it is dragged onto a different spot but still in range
+            transform.position = m_externalInputConnection.transform.position;
+
+            return;
+        }
+        // Connect the two connections.
+        m_partOutputConnection.Connect(m_externalInputConnection);
+
+        // Alert PartSystemManager to update stats.
+
+        // We move the parts to the appropriate positions.
+        transform.position = m_externalInputConnection.transform.position;
 
         // Afterwards, we set hasConnected to true.
         m_hasConnected = true;
@@ -80,7 +90,7 @@ public class Connective : MonoBehaviour
                 // Here we check what type of connection and also need to check if it is the right part type.
                 // If the connection found is this parts connection, we ignore it.
                 if (c == m_partInputConnection || c == m_partOutputConnection) {
-                    Debug.Log("Connection is this parts connection");
+                    //Debug.Log("Connection is this parts connection");
                     continue;
                 }
 
@@ -116,6 +126,7 @@ public class Connective : MonoBehaviour
         if (!connectionMade) {
             m_hasConnected = false;
             m_externalInputConnection = null;
+            m_partOutputConnection.Disconnect();
         }
     }
 

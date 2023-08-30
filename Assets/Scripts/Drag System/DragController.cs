@@ -26,7 +26,7 @@ public class DragController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
     void Update() {
-        if (m_isDragActive && (Input.GetMouseButtonDown(0))) {
+        if (m_isDragActive && (Input.GetMouseButtonUp(0))) {
             Drop();
             return;
         }
