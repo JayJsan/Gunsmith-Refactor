@@ -21,9 +21,10 @@ public class Connection : MonoBehaviour
         Trigger,
         Holder, // This isn't really a part type but holds the part when the players weapon is empty and no parts are connected.
     }
-
     [field: SerializeField]
+    [field: Tooltip("If the connection type is output, compatible parts are irrelevant.")]
     public Type ConnectionType {get; private set; } = Type.None;
+
     [field: SerializeField]
     public List<Part> CompatibleParts {get; private set; } = new List<Part>();
     [field: SerializeField]
