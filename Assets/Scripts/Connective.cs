@@ -53,7 +53,7 @@ public class Connective : MonoBehaviour
         // If hasConnected is true, we return.
         if (m_hasConnected) {
             // We move the parts to the appropriate positions, in case it is dragged onto a different spot but still in range
-            transform.position = m_externalInputConnection.transform.position;
+            transform.position = m_externalInputConnection.transform.position - m_partOutputConnection.transform.localPosition;
 
             return;
         }
@@ -63,7 +63,7 @@ public class Connective : MonoBehaviour
         // Alert PartSystemManager to update stats.
 
         // We move the parts to the appropriate positions.
-        transform.position = m_externalInputConnection.transform.position;
+        transform.position = m_externalInputConnection.transform.position - m_partOutputConnection.transform.localPosition;
 
         // Afterwards, we set hasConnected to true.
         m_hasConnected = true;
