@@ -17,10 +17,13 @@ public class Draggable : MonoBehaviour
 
     [SerializeField]
     private float m_scaleAnimationSpeed = 30f;
+
+    private Vector3 m_lastPositionBeforeDrag = Vector3.zero;
     void Start()
     {
         m_collider = GetComponent<Collider2D>();
         m_dragController = DragController.Instance;
+        m_lastPositionBeforeDrag = transform.position;
     }
 
     void FixedUpdate() {
@@ -39,5 +42,13 @@ public class Draggable : MonoBehaviour
             Vector3 size = Vector3.one * m_sizePercentage;
             transform.localScale = Vector3.Lerp(transform.localScale, size, m_scaleAnimationSpeed * Time.deltaTime);
         }
+    }
+
+    public Vector3 GetLastPositionBeforeDrag() {
+        return m_lastPositionBeforeDrag;
+    }
+
+    public void SetLastPositionBeforeDrag(Vector3 position) {
+        m_lastPositionBeforeDrag = position;
     }
 }

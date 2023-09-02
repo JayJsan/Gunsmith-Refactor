@@ -41,20 +41,33 @@ public class Connection : MonoBehaviour
             GetComponent<Collider2D>().enabled = false;
         }
     }
-
-    public Connection CheckConnected() {
-        return connectedTo;
-    }
-
-    public bool IsConnected() {
-        return isConnected;
-    }
-
     public void Disconnect() {
         connectedTo = null;
         isConnected = false;
         if (isHolder) {
             GetComponent<Collider2D>().enabled = true;
         }
+    }
+    public Connection IsConnectedTo() {
+        if (connectedTo == null) {
+            return null;
+        }
+        return connectedTo;
+    }
+    public bool IsConnected() {
+        return isConnected;
+    }
+
+    public void SwapConnections(Connection newConnection) {
+        // Disconnect old connections from new connection
+        newConnection.Disconnect();
+        // Disconnect connected connection to this connection.
+        connectedTo.Disconnect();
+        // Disconnect this connection from connected connection.
+        this.Disconnect();
+
+        // Connect new connection to connected connection.
+        newConnection.Connect(this);
+        this.Connect(newConnection);
     }
 }
