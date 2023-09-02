@@ -13,7 +13,6 @@ public class DragController : MonoBehaviour
     private Draggable m_lastDragged;
     public static DragController Instance { get; private set; }
     private Vector3 m_lastPositionBeforeDrag = Vector3.zero;
-
     void Awake() {
         // If there is an instance, and it's not me, delete myself.
         if (Instance != null && Instance != this) 
@@ -31,10 +30,6 @@ public class DragController : MonoBehaviour
         if (m_isDragActive && (Input.GetMouseButtonUp(0))) {
             Drop();
             return;
-        }
-        if (Input.GetMouseButtonDown(0)) {
-            m_lastPositionBeforeDrag = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
-            m_lastPositionBeforeDrag.z = 0f;
         }
         if (Input.GetMouseButton(0)) 
         {
@@ -56,7 +51,6 @@ public class DragController : MonoBehaviour
                 Draggable draggable = hit.collider.GetComponent<Draggable>();
                 if (draggable != null) {
                     m_lastDragged = draggable;
-                    draggable.SetLastPositionBeforeDrag(m_lastPositionBeforeDrag);
                     InitDrag();
                 }
             }
@@ -66,6 +60,7 @@ public class DragController : MonoBehaviour
     void InitDrag() {
         UpdateDragStatus(true);
         transform.localScale = Vector3.one;
+        if (!m_lastDragged.IsConnected()) m_lastDragged.SetLastPositionBeforeDrag(m_lastDragged.transform.position);
     }
     void Drag() {
         m_lastDragged.transform.position = new Vector2(m_worldPosition.x, m_worldPosition.y);

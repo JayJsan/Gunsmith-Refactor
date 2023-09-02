@@ -42,6 +42,11 @@ public class Draggable : MonoBehaviour
             Vector3 size = Vector3.one * m_sizePercentage;
             transform.localScale = Vector3.Lerp(transform.localScale, size, m_scaleAnimationSpeed * Time.deltaTime);
         }
+
+        if (!isDragging && !m_isConnected) {
+            Debug.DrawLine(transform.position, m_lastPositionBeforeDrag, Color.blue, 5f);
+            //m_lastPositionBeforeDrag = transform.position;
+        }
     }
 
     public Vector3 GetLastPositionBeforeDrag() {
@@ -50,5 +55,9 @@ public class Draggable : MonoBehaviour
 
     public void SetLastPositionBeforeDrag(Vector3 position) {
         m_lastPositionBeforeDrag = position;
+    }
+
+    public bool IsConnected() {
+        return m_isConnected;
     }
 }

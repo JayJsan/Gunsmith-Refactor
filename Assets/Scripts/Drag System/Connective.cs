@@ -2,9 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.AI;
-using UnityEditor.Search;
-using Unity.Mathematics;
 
 // https://youtu.be/I17uqTxbWK0?t=280
 public class Connective : MonoBehaviour
@@ -83,8 +80,12 @@ public class Connective : MonoBehaviour
             Connection connectionToReplace = m_externalInputConnection.IsConnectedTo();
             connectionToReplace.Disconnect();
             connectionToReplace.transform.parent.gameObject.GetComponent<Connective>().RemoveExternalInputConnection();
-            connectionToReplace.transform.parent.position = m_draggable.GetLastPositionBeforeDrag();
-            
+
+            // Instant movement
+            //connectionToReplace.transform.parent.position = m_draggable.GetLastPositionBeforeDrag();
+            // Smooth movement
+            connectionToReplace.transform.parent.position = Vector3.Lerp(connectionToReplace.transform.parent.position, m_draggable.GetLastPositionBeforeDrag(), m_connectionSpeed * Time.deltaTime);
+
             // Disconnect part being connected to from old part
             m_externalInputConnection.Disconnect();
 
@@ -93,7 +94,9 @@ public class Connective : MonoBehaviour
             m_externalInputConnection.Connect(m_partOutputConnection);
 
             // Move dragged part to connected position
-            transform.position = m_externalInputConnection.transform.position - m_partOutputConnection.transform.localPosition;
+            //transform.position = m_externalInputConnection.transform.position - m_partOutputConnection.transform.localPosition;
+            Vector3 partDestination = m_externalInputConnection.transform.position - m_partOutputConnection.transform.localPosition;
+            transform.position = Vector3.Lerp(transform.position, partDestination, m_connectionSpeed * Time.deltaTime);
             m_replacePart = false;
             return;
         }

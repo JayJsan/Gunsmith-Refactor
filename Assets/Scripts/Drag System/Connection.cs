@@ -21,6 +21,9 @@ public class Connection : MonoBehaviour
         Trigger,
         Holder, // This isn't really a part type but holds the part when the players weapon is empty and no parts are connected.
     }
+    [field: Tooltip("If the connection type is input, itemData is irrelevant.")]
+    public PartItemData itemData = null;
+
     [field: SerializeField]
     [field: Tooltip("If the connection type is output, compatible parts are irrelevant.")]
     public Type ConnectionType {get; private set; } = Type.None;
@@ -33,10 +36,13 @@ public class Connection : MonoBehaviour
     private bool isHolder = false;
 
     private Connection connectedTo = null;
+    private bool hasAlreadyDisconnected = false;
 
     public void Connect(Connection externalConnection) {
         connectedTo = externalConnection;
         isConnected = true;
+        hasAlreadyDisconnected = false;
+        UpdateStats(isConnected);
         if (isHolder) {
             GetComponent<Collider2D>().enabled = false;
         }
@@ -44,6 +50,7 @@ public class Connection : MonoBehaviour
     public void Disconnect() {
         connectedTo = null;
         isConnected = false;
+        UpdateStats(isConnected);
         if (isHolder) {
             GetComponent<Collider2D>().enabled = true;
         }
@@ -69,5 +76,27 @@ public class Connection : MonoBehaviour
         // Connect new connection to connected connection.
         newConnection.Connect(this);
         this.Connect(newConnection);
+    }
+
+    private void UpdateStats(bool isConnnected) {
+        if (ConnectionType == Type.Input) {
+            Debug.Log("itemData should only be on Output connections. This is an input connection.");
+            Debug.Log("oh this should execute regardless of item data being null or not.");
+            Debug.Log("I should really separate the input and output connections into separate scripts.");
+            return;
+        }
+        if (itemData == null) {
+            Debug.Log("HEY, WHO FORGOT TO PUT THEIR ITEM DATA ON THIS PART: " + gameObject.name);
+            return;
+        }
+        if (hasAlreadyDisconnected) {
+            return;
+        }
+        if (isConnected) {
+            StatManager.Instance.AddStats(itemData);
+        } else {
+            StatManager.Instance.RemoveStats(itemData);
+            hasAlreadyDisconnected = true;
+        }
     }
 }
