@@ -9,6 +9,7 @@ public class PlayerWeaponController : MonoBehaviour
     public float handDistance = 0.5f;
     public float tooCloseDistance = 2f;
     public KeyCode fireKey = KeyCode.Mouse0;
+    public KeyCode reloadKey = KeyCode.R;
     [Header("References")]
     public Transform hand;
     public Gun gun;
@@ -24,6 +25,7 @@ public class PlayerWeaponController : MonoBehaviour
         CheckIfHandIsOnTarget();
         MoveHand();
         ShootOnKey();
+        ReloadOnKey();
     }   
 
     #region MOVEMENT
@@ -101,6 +103,12 @@ public class PlayerWeaponController : MonoBehaviour
 
         if (Input.GetKeyUp(fireKey))
             gun.Stop();
+    }
+
+    private void ReloadOnKey()
+    {
+        if (Input.GetKeyDown(reloadKey))
+            gun.Reload();
     }
     #endregion
 }

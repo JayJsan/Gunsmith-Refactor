@@ -1,100 +1,137 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Stats : MonoBehaviour
 {
-    // 2/09/23 -- this is old code from years ago
-    #region Gun Stat Variables
-    // The reason there are three types of stats (default, current, and no prefix) is due to the way I change the stats in the inventory manager.
-    // If I use only one variable to keep track of the stats, I cannot reset it properly?? god i need to do this way better
-    //  -- I will refactor this one day but for now it works for now --
-    //
-
-    [Header("Gun Stats")]
-    // Speed
-    protected float defaultBulletForce = 0f;
-    public float bulletForce = 0f;
-
-    // Accuracy
-    // Default is 0.5f:
-    // 1f - 100% accurate
-    // 0f - Bullet spread spans across a fixed angle.
-    protected float defaultSpreadAngle = 0.5f;
-    [Range(0f, 1f)]
-    public float spreadAngle = 0.5f;
-    protected float defaultAccuracyMultiplier = 0f; // (defaultMultiplier + 1) * spread angle = no change
-    public float currentAccuracyMultiplier = 0f;
-    // Damage
-    // Self-explanatory
-    protected int defaultDamage = 0;
-    protected int currentDamage = 0;
-    public int damage = 0;
-
-    // Range
-    // Bullet "range" but mechanicall is the bullet lifetime. Will probably change later on.
-    protected float defaultRange = 1f;
-    protected float currentRange = 0f;
-    public float range = 0f;
-
-    // Fire Rate
-    // Default is 1: Being 1 bullet per second. fireRate is measured in time between seconds
-    // Bullets per second is well bullets per second.
-    protected float defaultFireRate = 1f;
-    protected float defaultBulletsPerSecond = 1f;
-    [Range(0f, 2f)]
-    public float fireRate = 1f;
-    public float currentBulletsPerSecond = 1f;
-
-    // Ammo
-    protected int defaultMaxAmmo = 0;
-    public int maxAmmo = 0;
-    public int currentAmmo = 0;
-
-    // Reload Time
-    // Default = 1f - Reloads in one second.
-    protected float defaultReloadTime = 1f;
-    public float reloadTime = 1f;
-
-    // # of bullets shot per fire.
-    protected int defaultNumberOfBullets = 1;
-    public int numberOfBullets = 0;
-
-    // Piercing - Allows the bullet to damage through an enemy and disappears after x amount of enemy collisions.
-    public int piercingAmount = 0;
-    protected int defaultPiercingAmount = 0;
-    protected int currentPiercingAmount = 0;
-
-    // Size - Changes the size of the bullet 
-    public float size = 1f;
-    protected float defaultSize = 1f;
-    protected float currentSize = 1f;
-
-    // Determines if weapon is semi-auto or automatic
-    public bool isAuto = false;
-    #endregion
-
-    #region Stat Change Methods
-
-    public void ResetStats()
-    {
-        this.bulletForce = defaultBulletForce;
-        this.spreadAngle = defaultSpreadAngle;
-        this.currentAccuracyMultiplier = defaultAccuracyMultiplier;
-        this.damage = defaultDamage;
-        this.currentDamage = defaultDamage;
-        this.range = defaultRange;
-        this.currentRange = defaultRange;
-        this.fireRate = defaultFireRate;
-        this.currentBulletsPerSecond = defaultBulletsPerSecond;
-        this.maxAmmo = defaultMaxAmmo;
-        this.reloadTime = defaultReloadTime;
-        this.numberOfBullets = defaultNumberOfBullets;
-        this.piercingAmount = defaultPiercingAmount;
-        this.size = defaultSize;
-        this.isAuto = false;
+    public enum Type {
+        DAMAGE,
+        ATTACK_SPEED,
+        RANGE,
+        RELOAD_TIME,
+        SPEED,
+        SPREAD_ANGLE,
+        MAX_AMMO,
+        NUMBER_OF_BULLETS,
+        PIERCING,
+        FLAT_SIZE
     }
 
+    public event EventHandler OnFinalStatsChanged;
 
+    #region Gun Stat Variables
+
+    public Dictionary<Type, float> stats = new Dictionary<Type, float>();
+
+    [Header("Gun Stats")]
+    public float baseDamage = 0f;
+    private float totalDamagePercetange;
+    private float finalDamage;
+
+    // fire rate is attacks per second e.g. 1f = 1 attack per second 
+    // 2f = 2 attacks per second 
+    // 0.5 = 1 attack every 2 seconds
+    public float baseAttackSpeed = 0f;
+    private float totalAttackSpeedPercentage;
+    private float finalAttackSpeed;
+
+    // bullet speed
+    public float baseBulletForce = 0f;
+    private float totalBulletForcePercentage;
+    private float finalBulletForce;
     #endregion
+
+    /// <summary>
+    /// Changes the value of a stat by a given amount. Specifically used for the core components of the gun that FLATLY changes the stat.
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <param name="type"></param>
+
+    public void Start()
+    {
+        CalculateFinalStats();
+    }
+
+    public void ModifyBaseDamageStat(float flatAmount, Type type) {
+        switch (type) {
+            case Type.DAMAGE:
+                baseDamage += flatAmount;
+                break;
+            case Type.ATTACK_SPEED:
+                baseAttackSpeed += flatAmount;
+                break;
+            case Type.SPEED:
+                baseBulletForce += flatAmount;
+                break;
+            case Type.RANGE:
+                break;
+            case Type.RELOAD_TIME:
+                break;
+            case Type.SPREAD_ANGLE:
+                break;
+            case Type.MAX_AMMO:
+                break;
+            case Type.NUMBER_OF_BULLETS:
+                break;
+            case Type.PIERCING:
+                break;
+            case Type.FLAT_SIZE:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void ModifyEffectiveStat(float percentage, Type type) {
+        switch (type) {
+            case Type.DAMAGE:
+                totalDamagePercetange += percentage;
+                break;
+            case Type.ATTACK_SPEED:
+                totalAttackSpeedPercentage += percentage;
+                break;
+            case Type.SPEED:
+                totalBulletForcePercentage += percentage;
+                break;
+            case Type.RANGE:
+                break;
+            case Type.RELOAD_TIME:
+                break;
+            case Type.SPREAD_ANGLE:
+                break;
+            case Type.MAX_AMMO:
+                break;
+            case Type.NUMBER_OF_BULLETS:
+                break;
+            case Type.PIERCING:
+                break;
+            case Type.FLAT_SIZE:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void CalculateFinalStats() {
+
+        finalDamage = baseDamage * (1 + totalDamagePercetange);
+        finalAttackSpeed = baseAttackSpeed * (1 + totalAttackSpeedPercentage);
+        finalBulletForce = baseBulletForce * (1 + totalBulletForcePercentage);
+
+        AddFinalStatsToDictionary();
+    }
+
+    private void AddFinalStatsToDictionary() {
+        // clear dictionary
+        stats.Clear();
+
+        stats.Add(Type.DAMAGE, finalDamage);
+        stats.Add(Type.ATTACK_SPEED, finalAttackSpeed);
+        stats.Add(Type.SPEED, finalBulletForce);
+
+        // After adding stats to dictionary, send event to any subscribed listeners to update their stats
+        CDL.Log<Stats>("Sending event to update stats.");
+        OnFinalStatsChanged?.Invoke(this, EventArgs.Empty);
+    }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Stats))]
 public class Gun : MonoBehaviour, IWeapon
 {
     public enum State  
@@ -16,7 +17,7 @@ public class Gun : MonoBehaviour, IWeapon
 
     [Header("References")]
     public Transform firePoint;
-    public Stats gunStats;
+    public Stats stats;
     public Transform hand;
     public GameObject owner;
     public ObjectPooler playerBulletPooler;
@@ -26,10 +27,16 @@ public class Gun : MonoBehaviour, IWeapon
     protected bool isExecuting = false;
     private bool isOnCooldown = false;
 
+    #region GUN STATS
+    private float attackSpeed;
+    #endregion
+
     void Start()
     {
         if (playerBulletPooler == null)
             CDL.LogError<Gun>("Object Pooler not found!");
+        stats = GetComponent<Stats>(); 
+        stats.OnFinalStatsChanged += SetGunStats;
     }
 
     void Update()
@@ -106,26 +113,27 @@ public class Gun : MonoBehaviour, IWeapon
         
         GameObject bullet = playerBulletPooler.GetPooledObject();
 
-        //bullet.transform.position = firePoint.position;
-
-        //bullet.transform.SetPositionAndRotation(firePoint.position, firePoint.rotation);
-
-        bullet.GetComponent<Bullet>().ActivateBullet(firePoint);
+        bullet.GetComponent<Bullet>().ActivateBullet(firePoint, stats);
 
         StartCoroutine(Cooldown());
+    }
+
+    public void Reload()
+    {
+        CDL.Log<Gun>("Reloading");
     }
 
     private IEnumerator Cooldown()
     {
         isOnCooldown = true;
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(1 / attackSpeed);
         isOnCooldown = false;
-        //yield return new WaitForSeconds(gunStats.fireRate);
     }
-
-
-
     #endregion
 
-
+    private void SetGunStats(object sender, EventArgs e)
+    {
+        CDL.Log<Stats>("Event Receieved! | Setting gun stats");
+        attackSpeed = stats.stats[Stats.Type.ATTACK_SPEED];
+    }
 }
