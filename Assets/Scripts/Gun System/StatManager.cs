@@ -23,7 +23,7 @@ public class StatManager : MonoBehaviour
     {
         stats = GetComponent<Stats>();
     }
-
+    /*
     public void AddStats(PartItemData itemData) {
         stats.ChangeDamage(itemData.damage);
         stats.ChangeFireRate(itemData.fireRateMultiplier);
@@ -49,4 +49,5 @@ public class StatManager : MonoBehaviour
         stats.ChangePiercing(-itemData.piercingAmount);
         stats.ChangeFlatSize(-itemData.sizeMultiplier);
     }
+    */
 }

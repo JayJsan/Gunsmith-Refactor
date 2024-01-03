@@ -95,62 +95,6 @@ public class Stats : MonoBehaviour
         this.isAuto = false;
     }
 
-    public void ChangeSpeed(float newBulletForce)
-    {
-        this.bulletForce = defaultBulletForce + newBulletForce;
-    }
 
-    public void ChangeSpreadAngle(float accuracyMultiplier)
-    {
-        this.spreadAngle = defaultSpreadAngle * (currentAccuracyMultiplier + accuracyMultiplier + 1);
-        currentAccuracyMultiplier += accuracyMultiplier;
-    }
-
-    public void ChangeDamage(int newDamage)
-    {
-        this.damage = currentDamage + newDamage;
-        currentDamage += newDamage;
-    }
-
-    public void ChangeRange(float newRange)
-    {
-        this.range = currentRange + newRange;
-        currentRange += newRange;
-    }
-
-    public void ChangeFireRate(float fireRateMultiplier)
-    {
-        // Fire rate is currently measured as time between shots instead of bullets per second
-        // to make it easier for myself, fire rate multipliers will be applied on bullets per seconds and then changed to time between shots
-        this.fireRate = 1 / (currentBulletsPerSecond * (fireRateMultiplier + 1));
-        currentBulletsPerSecond += currentBulletsPerSecond * (fireRateMultiplier + 1);
-    }
-
-    public void ChangeMaxAmmo(int newMaxAmmo)
-    {
-        this.maxAmmo = defaultMaxAmmo + newMaxAmmo;
-    }
-
-    public void ChangeReloadTime(float reloadTimeMultiplier)
-    {
-        this.reloadTime = defaultReloadTime * (reloadTimeMultiplier + 1);
-    }
-
-    public void ChangeNumberOfBullets(int newNumberOfBullets)
-    {
-        this.numberOfBullets = newNumberOfBullets;
-    }
-
-    public void ChangePiercing(int newPiercing)
-    {
-        this.piercingAmount = currentPiercingAmount + newPiercing;
-        currentPiercingAmount += newPiercing;
-    }
-
-    public void ChangeFlatSize(float amount)
-    {
-        this.size = currentSize + amount;
-        currentSize += amount;
-    }
     #endregion
 }

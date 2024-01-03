@@ -93,9 +93,9 @@ public class Connection : MonoBehaviour
             return;
         }
         if (isConnected) {
-            StatManager.Instance.AddStats(itemData);
+            //StatManager.Instance.AddStats(itemData);
         } else {
-            StatManager.Instance.RemoveStats(itemData);
+            //StatManager.Instance.RemoveStats(itemData);
             hasAlreadyDisconnected = true;
         }
     }

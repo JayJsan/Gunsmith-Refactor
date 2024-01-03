@@ -9,9 +9,7 @@ public class Connective : MonoBehaviour
     private Draggable m_draggable;
     private Connection m_partInputConnection = null;
     private Connection m_partOutputConnection = null;
-
     private Connection m_externalInputConnection = null;
-    private Connection m_outputConnectionToReplace = null;
     private bool m_hasConnected = false;
     private bool m_replacePart = false;
     
