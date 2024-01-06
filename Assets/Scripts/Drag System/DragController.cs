@@ -12,7 +12,7 @@ public class DragController : MonoBehaviour
     private Vector3 m_worldPosition;
     private Draggable m_lastDragged;
     public static DragController Instance { get; private set; }
-
+    private Vector3 m_lastPositionBeforeDrag = Vector3.zero;
     void Awake() {
         // If there is an instance, and it's not me, delete myself.
         if (Instance != null && Instance != this) 
@@ -25,8 +25,9 @@ public class DragController : MonoBehaviour
         } 
         DontDestroyOnLoad(gameObject);
     }
+
     void Update() {
-        if (m_isDragActive && (Input.GetMouseButtonDown(0))) {
+        if (m_isDragActive && (Input.GetMouseButtonUp(0))) {
             Drop();
             return;
         }
@@ -58,9 +59,12 @@ public class DragController : MonoBehaviour
 
     void InitDrag() {
         UpdateDragStatus(true);
+        transform.localScale = Vector3.one;
+        if (!m_lastDragged.IsConnected()) m_lastDragged.SetLastPositionBeforeDrag(m_lastDragged.transform.position);
     }
     void Drag() {
         m_lastDragged.transform.position = new Vector2(m_worldPosition.x, m_worldPosition.y);
+        m_lastDragged.transform.rotation = Quaternion.Lerp(m_lastDragged.transform.rotation, Quaternion.identity, 10f * Time.deltaTime);
     }
     void Drop() {
         UpdateDragStatus(false);
