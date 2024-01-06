@@ -8,9 +8,9 @@ public class Stats : MonoBehaviour
     public enum Type {
         DAMAGE,
         ATTACK_SPEED,
+        SPEED,
         RANGE,
         RELOAD_TIME,
-        SPEED,
         SPREAD_ANGLE,
         MAX_AMMO,
         NUMBER_OF_BULLETS,

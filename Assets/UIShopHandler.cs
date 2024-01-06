@@ -7,16 +7,18 @@ public class UIShopHandler : MonoBehaviour
 {
     [Header("Item 1")]
     public TextMeshProUGUI itemName1;
-    public TextMeshProUGUI itemCost1;
     public TextMeshProUGUI itemStats1;
+    public TextMeshProUGUI itemCost1;
     [Header("Item 2")]
     public TextMeshProUGUI itemName2;
-    public TextMeshProUGUI itemCost2;
     public TextMeshProUGUI itemStats2;
+    public TextMeshProUGUI itemCost2;
     [Header("Item 3")]
     public TextMeshProUGUI itemName3;
-    public TextMeshProUGUI itemCost3;
     public TextMeshProUGUI itemStats3;
+    public TextMeshProUGUI itemCost3;
+    [Header("Refresh")]
+    public TextMeshProUGUI refreshCost;
 
     public void UpdateItem(int itemNumber, string itemName, string itemCost, string itemStats)
     {
@@ -41,5 +43,10 @@ public class UIShopHandler : MonoBehaviour
                 CDL.LogError<UIShopHandler>("Invalid item number!");
                 break;
         }
+    }
+
+    public void UpdateRefreshCost(string cost)
+    {
+        refreshCost.text = cost;
     }
 }
