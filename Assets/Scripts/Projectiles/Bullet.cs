@@ -41,8 +41,8 @@ public class Bullet : MonoBehaviour
 
     private void SetBulletStats()
     {
-        damage = stats.stats[Stats.Type.DAMAGE];
-        speed = stats.stats[Stats.Type.SPEED];
+        damage = stats.GetFinalStat(Stats.Type.DAMAGE);
+        speed = stats.GetFinalStat(Stats.Type.SPEED);
     }
 
     private IEnumerator DestroyBullet()

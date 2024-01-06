@@ -5,6 +5,7 @@ using UnityEngine;
 public class StatManager : MonoBehaviour
 {
     public static StatManager Instance { get; private set; }
+    [SerializeField]
     private Stats stats;
     private void Awake() {
         // If there is an instance, and it's not me, delete myself.
@@ -21,33 +22,17 @@ public class StatManager : MonoBehaviour
 
     void Start()
     {
-        stats = GetComponent<Stats>();
-    }
-    /*
-    public void AddStats(PartItemData itemData) {
-        stats.ChangeDamage(itemData.damage);
-        stats.ChangeFireRate(itemData.fireRateMultiplier);
-        stats.ChangeRange(itemData.range);
-        stats.ChangeReloadTime(itemData.reloadTime);
-        stats.ChangeSpeed(itemData.bulletForce);
-        stats.ChangeSpreadAngle(itemData.accuracyMultiplier);
-        stats.ChangeMaxAmmo(itemData.maxAmmo);
-        stats.ChangeNumberOfBullets(itemData.numberOfBullets);
-        stats.ChangePiercing(itemData.piercingAmount);
-        stats.ChangeFlatSize(itemData.sizeMultiplier);
+        if (stats == null)
+        {
+            CDL.LogError<StatManager>("Stats not found!");
+        }
     }
 
-    public void RemoveStats(PartItemData itemData) {
-        stats.ChangeDamage(-itemData.damage);
-        stats.ChangeFireRate(-itemData.fireRateMultiplier);
-        stats.ChangeRange(-itemData.range);
-        stats.ChangeReloadTime(-itemData.reloadTime);
-        stats.ChangeSpeed(-itemData.bulletForce);
-        stats.ChangeSpreadAngle(-itemData.accuracyMultiplier);
-        stats.ChangeMaxAmmo(-itemData.maxAmmo);
-        stats.ChangeNumberOfBullets(-itemData.numberOfBullets);
-        stats.ChangePiercing(-itemData.piercingAmount);
-        stats.ChangeFlatSize(-itemData.sizeMultiplier);
+    public void ModifyBaseDamageStat(float flatAmount, Stats.Type type) {
+        stats.ModifyBaseDamageStat(flatAmount, type);
     }
-    */
+
+    public void ModifyEffectiveStat(float flatAmount, Stats.Type type) {
+        stats.ModifyEffectiveStat(flatAmount, type);
+    }
 }

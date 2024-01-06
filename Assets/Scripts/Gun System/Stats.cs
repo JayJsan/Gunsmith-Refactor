@@ -17,12 +17,11 @@ public class Stats : MonoBehaviour
         PIERCING,
         FLAT_SIZE
     }
-
     public event EventHandler OnFinalStatsChanged;
 
     #region Gun Stat Variables
 
-    public Dictionary<Type, float> stats = new Dictionary<Type, float>();
+    private Dictionary<Type, float> stats = new Dictionary<Type, float>();
 
     [Header("Gun Stats")]
     public float baseDamage = 0f;
@@ -53,6 +52,7 @@ public class Stats : MonoBehaviour
         CalculateFinalStats();
     }
 
+    #region long ass stats functions
     public void ModifyBaseDamageStat(float flatAmount, Type type) {
         switch (type) {
             case Type.DAMAGE:
@@ -81,6 +81,7 @@ public class Stats : MonoBehaviour
             default:
                 break;
         }
+        CalculateFinalStats();
     }
 
     public void ModifyEffectiveStat(float percentage, Type type) {
@@ -111,9 +112,82 @@ public class Stats : MonoBehaviour
             default:
                 break;
         }
+        CalculateFinalStats();
     }
 
-    public void CalculateFinalStats() {
+    public float GetBaseStat(Type type) {
+        switch (type) {
+            case Type.DAMAGE:
+                CDL.Log<Stats>("Base Damage: " + baseDamage);
+                return baseDamage;
+            case Type.ATTACK_SPEED:
+                CDL.Log<Stats>("Base Attack Speed: " + baseAttackSpeed);
+                return baseAttackSpeed;
+            case Type.SPEED:
+                CDL.Log<Stats>("Base Bullet Force: " + baseBulletForce);
+                return baseBulletForce;
+            // case Type.RANGE:
+            //     break;
+            // case Type.RELOAD_TIME:
+            //     break;
+            // case Type.SPREAD_ANGLE:
+            //     break;
+            // case Type.MAX_AMMO:
+            //     break;
+            // case Type.NUMBER_OF_BULLETS:
+            //     break;
+            // case Type.PIERCING:
+            //     break;
+            // case Type.FLAT_SIZE:
+            //     break;
+            default:
+                return -1;
+        }
+    }
+
+    public float GetPercentageStat(Type type)
+    {
+        switch (type)
+        {
+            case Type.DAMAGE:
+                CDL.Log<Stats>("Percentage Damage: " + totalDamagePercetange);
+                return totalDamagePercetange;
+            case Type.ATTACK_SPEED:
+                CDL.Log<Stats>("Percentage Attack Speed: " + totalAttackSpeedPercentage);
+                return totalAttackSpeedPercentage;
+            case Type.SPEED:
+                CDL.Log<Stats>("Percentage Bullet Force: " + totalBulletForcePercentage);
+                return totalBulletForcePercentage;
+            // case Type.RANGE:
+            //     break;
+            // case Type.RELOAD_TIME:
+            //     break;
+            // case Type.SPREAD_ANGLE:
+            //     break;
+            // case Type.MAX_AMMO:
+            //     break;
+            // case Type.NUMBER_OF_BULLETS:
+            //     break;
+            // case Type.PIERCING:
+            //     break;
+            // case Type.FLAT_SIZE:
+            //     break;
+            default:
+                return -1;
+        }
+    }
+
+    #endregion
+
+    public float GetFinalStat(Type type, bool log = false) 
+    {
+        if (log)
+            CDL.Log<Stats>("Final " + type.ToString() + ": " + stats[type]);
+        return stats[type];
+    }
+
+
+    private void CalculateFinalStats() {
 
         finalDamage = baseDamage * (1 + totalDamagePercetange);
         finalAttackSpeed = baseAttackSpeed * (1 + totalAttackSpeedPercentage);

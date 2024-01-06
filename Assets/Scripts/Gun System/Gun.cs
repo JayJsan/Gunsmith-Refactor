@@ -17,10 +17,10 @@ public class Gun : MonoBehaviour, IWeapon
 
     [Header("References")]
     public Transform firePoint;
-    public Stats stats;
     public Transform hand;
-    public GameObject owner;
+    public Stats stats;
     public ObjectPooler playerBulletPooler;
+    public GameObject owner;
 
     // #### VARIABLES ####
     private Vector3 target;
@@ -134,6 +134,6 @@ public class Gun : MonoBehaviour, IWeapon
     private void SetGunStats(object sender, EventArgs e)
     {
         CDL.Log<Stats>("Event Receieved! | Setting gun stats");
-        attackSpeed = stats.stats[Stats.Type.ATTACK_SPEED];
+        attackSpeed = stats.GetFinalStat(Stats.Type.ATTACK_SPEED);
     }
 }

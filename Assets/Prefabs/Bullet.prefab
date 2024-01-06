@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.0033445, y: -1.1183527, z: -0.21634614}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6153988074551109999}
@@ -51,6 +51,7 @@ MonoBehaviour:
   rb: {fileID: 3502837000769950812}
   col: {fileID: 934454031314003692}
   bullet: {fileID: 6153988074551109999}
+  stats: {fileID: 0}
 --- !u!1 &4526553432199571609
 GameObject:
   m_ObjectHideFlags: 0
